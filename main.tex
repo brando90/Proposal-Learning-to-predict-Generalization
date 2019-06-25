@@ -1,0 +1,110 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{Proposal: Learning to predict Generalization}
+\author{Brando Miranda }
+\date{May 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Can generalization gap (and test performance) be predicted from training data, network parameters and network architecture?
+Answering this question would have important implications in machine learning.
+If we could predict model performance without running it, then we could speed up machine learning research non-trivially.
+This could be especially useful because model and architecture selection is extremely difficult.
+In addition, this can be very useful for domains where test sets are unavailable.
+Automating this process or at the very least providing additional tools for researchers to use for model search would be invaluable.
+Last but not least, studying the relationship between training data, network parameters and network architecture is crucial for the progress of the science of Deep Learning.
+Progressing the scientific understanding of Deep Learning is crucial essential to understand why these models work as well as they due do and create a safe well understand A.I. that runs our world. 
+
+\section{Problem Formulation: Prediction of Model Performance }
+
+We propose to study model performance and architecture search by creating a supervised data set. 
+The raw features $X$ is the Model information (e.g. architecture, optimization method, hyper parameters, even weight initialization) and the target $Y$ is performance of the model (either test performance or generalization i.e. the difference in train and test errors). 
+
+The data set would look as follow:
+
+$$ S_N = \{ (x_n = \text{Model info}, y_n = \text{Test Performance} ) \}$$
+
+From this we propose to design different models that learn the relationship between model architectures and its test performance.
+
+As an initial starting point we suggest to fixed a data set (Cifar-10 or Cifar-100, potentially sub-sampled), obtained the target $y_n$ (test performance) by sampling models $x_n$ randomly. 
+The raw features $x_n$ may be generated as follows by sampling from the following neural network building blocks:
+
+\begin{itemize}
+    \item number of fully connected layers
+    \item number of units
+    \item activation functions
+    \item depth
+    \item convolution layers
+    \item shape of filters for convolutional layers
+    \item batch-normalization layers
+    \item drop out layers (and hyper parameters)
+    \item residual blocks
+    \item different optimization algorithms and their hyper parameters (e.g. SGD, adagrad, adam, momentum, etc)
+    \item weights at initialization or initialization algorithm (and its hyper parameters)
+    \item Alex net like architectures
+    \item VGG like architectures
+    \item perhaps how to encourage new novel architectures?
+\end{itemize}
+
+a fuller description of more blocks that may be used can be found here: \cite{relational}.
+We also think graph networks might be an interesting direction to explore.
+
+\section{Science of Deep Learning}
+
+\subsection{How do weight choice correlate with generalization and regularization?}
+
+Another interesting question that has been explored in \cite{margin,linear} is what measures correlate with the generalization gap. 
+Here we suggest to also study what measures correlate with the test performance directly. 
+
+%%We also propose that as an additional feature we use the final weights of the model as part of raw feature.
+%%With this we can study how (functions) of the chosen weights correlate with test performance or generalization.
+%%This is an important aspect to study because it can give us insights what type of implicit regularization Neural Networks and their optimization methods might be performing.
+
+\section{Supplementary}
+
+\subsection{Creating a massive collaborative data set}
+
+This project was inspired by noticing that millions of researchers worldwide perform model search independently.
+All of them find many non-trivial architectures that perform well and others that don't.
+If the main deep learning frameworks like Tensorflow or Pytorch had a mechanism to log these daily findings (in the form of a ``git commit") then it would be easy to have a massive data set for model prediction.
+Then we could have machine learning algorithms that learn to predict what other machine learning algorithms will perform well, a type of meta-learning.
+
+
+\subsection{TODOs}
+
+We outline other ideas worth thinking about:
+
+\begin{itemize}
+    \item outlining more concretely how an oracle that predicts test performance (or generalization) might be used for Neural Architecture Search (NAS).
+    \item outlining initial models for this domain
+    \item thinking about more interesting ways than random search for generating supervised data set
+    \item outlining more concretely the raw representation of model description
+    \item potentially inserting in the raw representation statistical learning complexity measures like VC dimension, Radamacher complexity etc.
+    \item connection to the meta-learning literature.
+    \item RNN architectures.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{margin} 
+Yiding Jiang and Dilip Krishnan and Hossein Mobahi, Samy Bengio 
+A Margin-Based Measure of Generalization for Deep Networks, 2019.
+
+\bibitem{linear} 
+Qianli Liao, Brando Miranda, Andrzej Banburski, Jack Hidary, Tomaso Poggio
+A Surprising Linear Relationship Predicts Test Performance in Deep Networks, 2018
+
+\bibitem{relational}
+Peter W. Battaglia, Jessica B. Hamrick, Victor Bapst, Alvaro Sanchez-Gonzalez, Vinicius Zambaldi, Mateusz Malinowski, Andrea Tacchetti, David Raposo, Adam Santoro, Ryan Faulkner, Caglar Gulcehre, Francis Song, Andrew Ballard, Justin Gilmer, George Dahl, Ashish Vaswani, Kelsey Allen, Charles Nash, Victoria Langston, Chris Dyer, Nicolas Heess, Daan Wierstra, Pushmeet Kohli, Matt Botvinick, Oriol Vinyals, Yujia Li, Razvan Pascanu.
+Relational inductive biases, deep learning, and graph networks
+
+\end{thebibliography}
+
+
+\end{document}
+
